@@ -2,6 +2,7 @@
 
 import { Task, TaskFormData } from '@/types/task';
 import { useState, useEffect } from 'react';
+import ConfirmationModal from './ConfirmationModal';
 
 interface TaskDetailProps {
   task: Task;
@@ -12,6 +13,7 @@ interface TaskDetailProps {
 
 export default function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDetailProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [formData, setFormData] = useState<TaskFormData>({
     title: task.title,
     description: task.description,
@@ -173,16 +175,24 @@ export default function TaskDetail({ task, onClose, onUpdate, onDelete }: TaskDe
           </div>
 
           <button
-            onClick={() => {
-              onDelete();
-              onClose();
-            }}
+            onClick={() => setShowDeleteConfirm(true)}
             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
           >
             Delete Task
           </button>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={onDelete}
+        title="Delete Task"
+        message={`Are you sure you want to delete "${task.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
     </div>
   );
 }

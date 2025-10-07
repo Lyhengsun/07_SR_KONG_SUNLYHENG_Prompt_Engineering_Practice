@@ -2,6 +2,7 @@
 
 import { Task } from '@/types/task';
 import { useState } from 'react';
+import ConfirmationModal from './ConfirmationModal';
 
 interface TaskItemProps {
   task: Task;
@@ -15,7 +16,6 @@ export default function TaskItem({ task, onToggle, onDelete, onViewDetail }: Tas
 
   const handleDelete = () => {
     onDelete(task.id);
-    setShowDeleteConfirm(false);
   };
 
   const formatDate = (date: Date) => {
@@ -84,36 +84,30 @@ export default function TaskItem({ task, onToggle, onDelete, onViewDetail }: Tas
                 </svg>
               </button>
 
-              {!showDeleteConfirm ? (
-                <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                  title="Delete task"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
-              ) : (
-                <div className="flex gap-1">
-                  <button
-                    onClick={handleDelete}
-                    className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="px-2 py-1 text-xs bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                title="Delete task"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Delete Task"
+        message={`Are you sure you want to delete "${task.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
     </div>
   );
 }

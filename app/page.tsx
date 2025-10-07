@@ -147,6 +147,8 @@ export default function Home() {
           }}
           onDelete={() => {
             deleteTask(selectedTask.id);
+            setIsDetailOpen(false);
+            setSelectedTask(null);
           }}
         />
       )}
